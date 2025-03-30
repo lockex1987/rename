@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -6,6 +7,7 @@ import java.util.List;
 // javac Rename.java
 // native-image --static --libc=musl Rename
 // Copy file chạy vào ~/.local/bin
+// mv rename ~/.local/bin/
 public class Rename {
 
     public String rootDir;
@@ -56,10 +58,10 @@ public class Rename {
                 mangaChapter();
                 break;
             case "x":
-                // extract();
+                extract();
                 break;
             case "z":
-                // compress();
+                compress();
                 break;
             default:
                 System.out.println("Invalid command");
@@ -79,8 +81,10 @@ public class Rename {
         for (File f : ar) {
             String oldName = f.getName();
             String newName = oldName.toLowerCase();
+            // Chuẩn hóa nhiều dấu cách thành một
+            newName = newName.replaceAll(" \\s+", " ");
             if (!newName.equals(oldName)) {
-                System.out.println(oldName);
+                System.out.println(oldName + " -> " + newName);
                 f.renameTo(new File(rootDir + "/" + newName));
             }
         }
@@ -245,6 +249,36 @@ public class Rename {
         }
     }
 
+    public void extract() {
+        List<String> compressExtensionList = List.of("cbr", "cbz", "rar", "zip");
+        for (File f : ar) {
+            if (f.isFile()) {
+                String oldName = f.getName();
+                String[] temp = extractExtensionAndFileName(oldName);
+                String extension = temp[0].toLowerCase();
+                if (compressExtensionList.contains(extension)) {
+                    ProcessBuilder processBuilder = new ProcessBuilder("aunpack", oldName);
+                    executeProcess(processBuilder);
+                }
+            }
+        }
+    }
+
+    public void compress() {
+        for (File f : ar) {
+            if (f.isDirectory()) {
+                String oldName = f.getName();
+                ProcessBuilder processBuilder = new ProcessBuilder(
+                    "7z",
+                    "a",
+                    oldName + ".zip",
+                    oldName
+                );
+                executeProcess(processBuilder);
+            }
+        }
+    }
+
     public String[] extractExtensionAndFileName(String fileName) {
         int pos = fileName.lastIndexOf(".");
         if (pos > 0 && pos < (fileName.length() - 1)) {
@@ -259,5 +293,28 @@ public class Rename {
             "",
             fileName
         };
+    }
+
+    public void executeProcess(ProcessBuilder processBuilder) {
+        try {
+            processBuilder.directory(new File(rootDir));
+
+            Process process = processBuilder.start();
+            InputStream is = process.getInputStream();
+            is.transferTo(System.out);
+            /*
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+            */
+
+            // int exitStatus = process.waitFor();
+            // System.out.println("exitStatus " + exitStatus);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

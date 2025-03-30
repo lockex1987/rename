@@ -12,7 +12,7 @@ rename <command> <folder> [option]
 Trong đó `command` có thể có các giá trị sau:
 
 | command | Mô tả                                             |
-| ------- | ------------------------------------------------- |
+|---------|---------------------------------------------------|
 | `pr`    | Prefix                                            |
 | `pt`    | Postfix                                           |
 | `lc`    | Lower case                                        |
@@ -26,11 +26,10 @@ Trong đó `command` có thể có các giá trị sau:
 | `x`     | Giải nén các file                                 |
 | `mc`    | Manga chapter                                     |
 
-
-
 ### Phiên bản chương trình sử dụng Bash
 
-Sử dụng atool để extract, tự động kiểm tra xem file archive chỉ có chứa một file hoặc một thư mục ở gốc hay không. Nếu không thì tạo một thư mục để chứa tất cả.
+Sử dụng atool để extract, tự động kiểm tra xem file archive chỉ có chứa một file hoặc một thư mục ở gốc hay không. Nếu
+không thì tạo một thư mục để chứa tất cả.
 
 Cài đặt atool:
 
@@ -56,19 +55,33 @@ Usage: aunpack <archive file>
 
 Available from most linux distro repos.
 
+Khi giải nén file rar có thể bị lỗi:
+
+```shell
+aunpack: captain atom 05 (1987).cbr: format not known, identifying using file
+aunpack: captain atom 05 (1987).cbr: format is `rar'
+Can't exec "rar": No such file or directory at /usr/bin/aunpack line 1868.
+rar: cannot execute - No such file or directory
+aunpack: rar ...: non-zero return-code
+```
+
+Cần cài thêm:
+
+```shell
+sudo apt-get install rar
+```
+
 [Trang chủ atool](https://www.nongnu.org/atool/)
-
-
-
-
 
 Ở môi trường KDE, sử dụng ark -ba <path>.
 
--b is short for --batch, and just signifies that this will be handled without using the GUI. Note, that the KDE notification area will still be used for progress display.
+-b is short for --batch, and just signifies that this will be handled without using the GUI. Note, that the KDE
+notification area will still be used for progress display.
 
 -a is short for --autosubfolder, which creates a directory as mentioned above.
 
--a, --autosubfolder: Archive contents will be read, and if detected to not be a single folder or a single file archive, a subfolder with the name of the archive will be created.
+-a, --autosubfolder: Archive contents will be read, and if detected to not be a single folder or a single file archive,
+a subfolder with the name of the archive will be created.
 
 Have a look at ark --help for more things that can be done with the batch interface.
 
