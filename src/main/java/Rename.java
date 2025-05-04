@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class Rename {
 
     public void sortFiles() {
         List<String> oldNameList = Arrays.stream(ar)
-            .map(f -> f.getName())
+            .map(File::getName)
             .sorted()
             .toList();
         int i = 0;
@@ -177,7 +178,7 @@ public class Rename {
     }
 
     public void removeCharacter(String other) {
-        List<String> phraseList = List.of(
+        List<String> phraseList = new ArrayList<>(List.of(
             "!",
             " (digital-empire)",
             " (zone-empire)",
@@ -199,7 +200,7 @@ public class Rename {
             " [bluray]",
             " [yts.mx]",
             " (lucaz)"
-        );
+        ));
         if (other != null && !other.isEmpty()) {
             phraseList.add(other);
         }
@@ -207,10 +208,10 @@ public class Rename {
         for (File f : ar) {
             String oldName = f.getName();
             String newName = oldName.toLowerCase();
-            newName = newName.replaceAll("_", " ");
-            newName = newName.replaceAll(":", " - ");
+            newName = newName.replace("_", " ");
+            newName = newName.replace(":", " - ");
             for (String phrase : phraseList) {
-                newName = newName.replaceAll(phrase, "");
+                newName = newName.replace(phrase, "");
             }
 
             // Thay các chỉ số 001, 002,... thành 01, 02,...
@@ -229,7 +230,7 @@ public class Rename {
                 String folderName = subFolder.getName();
                 File[] arInSubFolder = new File(rootDir + "/" + folderName).listFiles();
                 List<String> nameList = Arrays.stream(arInSubFolder)
-                    .map(f -> f.getName())
+                    .map(File::getName)
                     .sorted()
                     .toList();
 
