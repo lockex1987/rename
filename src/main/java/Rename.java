@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +18,7 @@ public class Rename {
     public File[] ar;
 
     public static void main(String[] args) {
-        System.out.println("Rename Java");
+        // System.out.println("Rename Java");
         // System.out.println("tap 001 x".replaceAll("\\s0(\\d\\d)", " $1"));
         new Rename().process(args);
     }
@@ -301,19 +303,18 @@ public class Rename {
             processBuilder.directory(new File(rootDir));
 
             Process process = processBuilder.start();
-            InputStream is = process.getInputStream();
-            is.transferTo(System.out);
-            /*
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
+            InputStream inputStream = process.getInputStream();
+
+            // inputStream.transferTo(System.out);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
             }
-            */
 
-            // int exitStatus = process.waitFor();
-            // System.out.println("exitStatus " + exitStatus);
+            int exitStatus = process.waitFor();
+            System.out.println("Process finished with exit status " + exitStatus);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
